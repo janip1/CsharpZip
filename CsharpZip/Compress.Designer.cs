@@ -44,6 +44,8 @@
             this.btnCompress = new System.Windows.Forms.Button();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtFileName = new System.Windows.Forms.TextBox();
             this.grpFileType.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -55,7 +57,7 @@
             this.grpFileType.Controls.Add(this.optZip);
             this.grpFileType.Location = new System.Drawing.Point(13, 13);
             this.grpFileType.Name = "grpFileType";
-            this.grpFileType.Size = new System.Drawing.Size(124, 96);
+            this.grpFileType.Size = new System.Drawing.Size(124, 100);
             this.grpFileType.TabIndex = 0;
             this.grpFileType.TabStop = false;
             this.grpFileType.Text = "Vrsta datoteke";
@@ -102,7 +104,7 @@
             this.groupBox2.Controls.Add(this.txtPass);
             this.groupBox2.Location = new System.Drawing.Point(144, 13);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(200, 100);
+            this.groupBox2.Size = new System.Drawing.Size(226, 100);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Enkripcija";
@@ -140,7 +142,7 @@
             this.txtPass2.Location = new System.Drawing.Point(66, 68);
             this.txtPass2.Name = "txtPass2";
             this.txtPass2.PasswordChar = '*';
-            this.txtPass2.Size = new System.Drawing.Size(128, 20);
+            this.txtPass2.Size = new System.Drawing.Size(154, 20);
             this.txtPass2.TabIndex = 2;
             this.txtPass2.UseSystemPasswordChar = true;
             // 
@@ -149,14 +151,14 @@
             this.txtPass.Location = new System.Drawing.Point(66, 42);
             this.txtPass.Name = "txtPass";
             this.txtPass.PasswordChar = '*';
-            this.txtPass.Size = new System.Drawing.Size(128, 20);
+            this.txtPass.Size = new System.Drawing.Size(154, 20);
             this.txtPass.TabIndex = 1;
             this.txtPass.UseSystemPasswordChar = true;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 124);
+            this.label2.Location = new System.Drawing.Point(13, 154);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(49, 13);
             this.label2.TabIndex = 2;
@@ -164,14 +166,14 @@
             // 
             // txtSavePath
             // 
-            this.txtSavePath.Location = new System.Drawing.Point(64, 122);
+            this.txtSavePath.Location = new System.Drawing.Point(86, 152);
             this.txtSavePath.Name = "txtSavePath";
-            this.txtSavePath.Size = new System.Drawing.Size(203, 20);
+            this.txtSavePath.Size = new System.Drawing.Size(284, 20);
             this.txtSavePath.TabIndex = 3;
             // 
             // btnCompress
             // 
-            this.btnCompress.Location = new System.Drawing.Point(269, 148);
+            this.btnCompress.Location = new System.Drawing.Point(13, 179);
             this.btnCompress.Name = "btnCompress";
             this.btnCompress.Size = new System.Drawing.Size(75, 23);
             this.btnCompress.TabIndex = 4;
@@ -183,18 +185,36 @@
             // 
             this.btnBrowse.BackColor = System.Drawing.Color.Transparent;
             this.btnBrowse.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnBrowse.BackgroundImage")));
-            this.btnBrowse.Location = new System.Drawing.Point(243, 121);
+            this.btnBrowse.Location = new System.Drawing.Point(343, 151);
             this.btnBrowse.Name = "btnBrowse";
-            this.btnBrowse.Size = new System.Drawing.Size(24, 21);
+            this.btnBrowse.Size = new System.Drawing.Size(27, 21);
             this.btnBrowse.TabIndex = 5;
             this.btnBrowse.UseVisualStyleBackColor = false;
             this.btnBrowse.Click += new System.EventHandler(this.BtnBrowse_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(13, 126);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(72, 13);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "Ime datoteke:";
+            // 
+            // txtFileName
+            // 
+            this.txtFileName.Location = new System.Drawing.Point(86, 126);
+            this.txtFileName.Name = "txtFileName";
+            this.txtFileName.Size = new System.Drawing.Size(284, 20);
+            this.txtFileName.TabIndex = 7;
             // 
             // Compress
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(358, 183);
+            this.ClientSize = new System.Drawing.Size(382, 214);
+            this.Controls.Add(this.txtFileName);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.btnCompress);
             this.Controls.Add(this.txtSavePath);
@@ -231,5 +251,7 @@
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.CheckBox chkEncrypt;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtFileName;
     }
 }

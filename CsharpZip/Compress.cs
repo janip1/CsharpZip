@@ -42,7 +42,7 @@ namespace CsharpZip
             if (optZip.Checked)
             {
                 //Compress Zip
-                using (var zip = File.OpenWrite(savePath + ".zip"))
+                using (var zip = File.OpenWrite(savePath + @"\" + txtFileName.Text + ".zip"))
                 using (var zipWriter = WriterFactory.Open(zip, ArchiveType.Zip, CompressionType.Deflate))
                 {
                     foreach (var filePath in filesList)
@@ -55,10 +55,26 @@ namespace CsharpZip
             else if (optRar.Checked)
             {
                 //Compress RAR
+                using (var rar = File.OpenWrite(savePath + @"\" + txtFileName.Text + ".rar"))
+                using (var rarWriter = WriterFactory.Open(rar, ArchiveType.GZip, CompressionType.GZip))
+                {
+                    foreach(var filePath in filesList)
+                    {
+                        rarWriter.Write(Path.GetFileName(filePath), filePath);
+                    }
+                }
             }
             else if (optTar.Checked)
             {
                 //Compress TAR
+                using (var tar = File.OpenWrite(savePath + @"\" + txtFileName.Text + ".tar.bz2"))
+                using (var tarWriter = WriterFactory.Open(tar, ArchiveType.Tar, CompressionType.BZip2))
+                {
+                    foreach (var filePath in filesList)
+                    {
+                        tarWriter.Write(Path.GetFileName(filePath), filePath);
+                    }
+                }
             }
         }
     }
