@@ -28,11 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Compress));
             this.grpFileType = new System.Windows.Forms.GroupBox();
             this.optTar = new System.Windows.Forms.RadioButton();
             this.optRar = new System.Windows.Forms.RadioButton();
             this.optZip = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.chkEncrypt = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.txtPass2 = new System.Windows.Forms.TextBox();
@@ -42,7 +44,6 @@
             this.btnCompress = new System.Windows.Forms.Button();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.chkEncrypt = new System.Windows.Forms.CheckBox();
             this.grpFileType.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -105,6 +106,16 @@
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Enkripcija";
+            // 
+            // chkEncrypt
+            // 
+            this.chkEncrypt.AutoSize = true;
+            this.chkEncrypt.Location = new System.Drawing.Point(13, 20);
+            this.chkEncrypt.Name = "chkEncrypt";
+            this.chkEncrypt.Size = new System.Drawing.Size(146, 17);
+            this.chkEncrypt.TabIndex = 5;
+            this.chkEncrypt.Text = "Zaščiti datoteke z geslom";
+            this.chkEncrypt.UseVisualStyleBackColor = true;
             // 
             // label4
             // 
@@ -170,23 +181,14 @@
             // 
             // btnBrowse
             // 
-            this.btnBrowse.Location = new System.Drawing.Point(269, 122);
+            this.btnBrowse.BackColor = System.Drawing.Color.Transparent;
+            this.btnBrowse.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnBrowse.BackgroundImage")));
+            this.btnBrowse.Location = new System.Drawing.Point(243, 121);
             this.btnBrowse.Name = "btnBrowse";
-            this.btnBrowse.Size = new System.Drawing.Size(75, 21);
+            this.btnBrowse.Size = new System.Drawing.Size(24, 21);
             this.btnBrowse.TabIndex = 5;
-            this.btnBrowse.Text = "Razišči";
-            this.btnBrowse.UseVisualStyleBackColor = true;
+            this.btnBrowse.UseVisualStyleBackColor = false;
             this.btnBrowse.Click += new System.EventHandler(this.BtnBrowse_Click);
-            // 
-            // chkEncrypt
-            // 
-            this.chkEncrypt.AutoSize = true;
-            this.chkEncrypt.Location = new System.Drawing.Point(13, 20);
-            this.chkEncrypt.Name = "chkEncrypt";
-            this.chkEncrypt.Size = new System.Drawing.Size(146, 17);
-            this.chkEncrypt.TabIndex = 5;
-            this.chkEncrypt.Text = "Zaščiti datoteke z geslom";
-            this.chkEncrypt.UseVisualStyleBackColor = true;
             // 
             // Compress
             // 

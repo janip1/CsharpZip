@@ -158,7 +158,6 @@
             // 
             // btnCompress
             // 
-            this.btnCompress.Enabled = false;
             this.btnCompress.Location = new System.Drawing.Point(559, 99);
             this.btnCompress.Name = "btnCompress";
             this.btnCompress.Size = new System.Drawing.Size(75, 23);

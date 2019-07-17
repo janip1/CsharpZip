@@ -12,6 +12,8 @@ using SharpCompress.Archives;
 using SharpCompress.Archives.Zip;
 using SharpCompress.Writers;
 using System.IO.Compression;
+using System.IO;
+using SharpCompress.Common;
 
 namespace CsharpZip
 {
@@ -20,7 +22,6 @@ namespace CsharpZip
         public Compress()
         {
             InitializeComponent();
-          
         }
 
         private void BtnBrowse_Click(object sender, EventArgs e)
@@ -36,11 +37,20 @@ namespace CsharpZip
 
         private void BtnCompress_Click(object sender, EventArgs e)
         {
+            var filesList = Form1.filesList;
             string savePath = txtSavePath.Text;
             if (optZip.Checked)
             {
                 //Compress Zip
-                
+                using (var zip = File.OpenWrite(savePath + ".zip"))
+                using (var zipWriter = WriterFactory.Open(zip, ArchiveType.Zip, CompressionType.Deflate))
+                {
+                    foreach (var filePath in filesList)
+                    {
+                        zipWriter.Write(Path.GetFileName(filePath), filePath);
+                    }
+                }
+
             }
             else if (optRar.Checked)
             {

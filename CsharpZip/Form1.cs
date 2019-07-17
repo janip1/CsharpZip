@@ -10,6 +10,7 @@ namespace CsharpZip
     public partial class Form1 : Form
     {
         List<string> listFiles = new List<string>();
+        public static StringCollection filesList = null;
         public Form1()
         {
             InitializeComponent();
@@ -138,7 +139,17 @@ namespace CsharpZip
 
         private void BtnCompress_Click(object sender, EventArgs e)
         {
-            //public static string SetValueForText1 = "";
+            int i = 0;
+            filesList = new StringCollection();
+            foreach (ListViewItem item in fileExplorer.SelectedItems)
+            {
+                string file = item.SubItems[1].Text;
+                filesList.Add(item.SubItems[4].Text + @"\" + file);
+                i++;
+            }
+            DataObject dataObject = new DataObject();
+            dataObject.SetFileDropList(filesList);
+
             Compress compWin = new Compress();
             compWin.ShowDialog();
         }
