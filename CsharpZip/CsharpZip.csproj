@@ -55,6 +55,7 @@
     <Compile Include="Compress.Designer.cs">
       <DependentUpon>Compress.cs</DependentUpon>
     </Compile>
+    <Compile Include="DefaultIcons.cs" />
     <Compile Include="Extract.cs">
       <SubType>Form</SubType>
     </Compile>

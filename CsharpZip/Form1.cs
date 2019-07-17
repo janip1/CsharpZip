@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CsharpZip
@@ -53,7 +48,12 @@ namespace CsharpZip
                     foreach (DirectoryInfo subDirectory in subdirectoryInfo)
                     {
                         listFiles.Add(subDirectory.FullName);
-                        ListViewItem row = new ListViewItem(subDirectory.Name);
+                        ListViewItem row = new ListViewItem();
+                        Icon iconForFile = DefaultIcons.FolderLarge;
+                        
+                        imageList1.Images.Add(subDirectory.FullName, iconForFile);
+                        row.ImageKey = subDirectory.FullName;
+                        row.SubItems.Add(subDirectory.Name);
                         fileExplorer.Items.Add(row);
                     }
 
@@ -81,7 +81,6 @@ namespace CsharpZip
 
         private void Path_TextChanged(object sender, EventArgs e)
         {
-
             if (Directory.GetCurrentDirectory() == txtPath.Text)
             {
                 toolStripStatusLabel2.Text = "Direktorij naložen!";
@@ -91,7 +90,6 @@ namespace CsharpZip
                 if (Directory.Exists(txtPath.Text))
                 {
                     DirectoryInfo directoryInfo = new DirectoryInfo(txtPath.Text);
-                    FileStream fileStream = null;
 
                     FileInfo[] fileInfo = directoryInfo.GetFiles();
                     DirectoryInfo[] subdirectoryInfo = directoryInfo.GetDirectories();
@@ -99,7 +97,12 @@ namespace CsharpZip
                     foreach (DirectoryInfo subDirectory in subdirectoryInfo)
                     {
                         listFiles.Add(subDirectory.FullName);
-                        ListViewItem row = new ListViewItem(subDirectory.Name);
+                        ListViewItem row = new ListViewItem();
+                        Icon iconForFile = DefaultIcons.FolderLarge;
+
+                        imageList1.Images.Add(subDirectory.FullName, iconForFile);
+                        row.ImageKey = subDirectory.FullName;
+                        row.SubItems.Add(subDirectory.Name);
                         fileExplorer.Items.Add(row);
                     }
 
@@ -151,7 +154,7 @@ namespace CsharpZip
 
             int i = 0;
 
-            System.Collections.Specialized.StringCollection filePath = new System.Collections.Specialized.StringCollection();
+            StringCollection filePath = new StringCollection();
             foreach (ListViewItem item in fileExplorer.SelectedItems)
             {
                 string file = item.SubItems[1].Text;
