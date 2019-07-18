@@ -150,7 +150,6 @@
             // 
             this.txtPass.Location = new System.Drawing.Point(66, 42);
             this.txtPass.Name = "txtPass";
-            this.txtPass.PasswordChar = '*';
             this.txtPass.Size = new System.Drawing.Size(154, 20);
             this.txtPass.TabIndex = 1;
             this.txtPass.UseSystemPasswordChar = true;
