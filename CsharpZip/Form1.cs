@@ -1,11 +1,8 @@
-﻿using SharpCompress.Readers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Drawing;
 using System.IO;
-using System.Security.Cryptography;
-using System.Text;
 using System.Windows.Forms;
 
 namespace CsharpZip
@@ -34,7 +31,7 @@ namespace CsharpZip
             Application.Restart();
         }
 
-        private void btnOpen_Click(object sender, EventArgs e)
+        private void BtnOpen_Click(object sender, EventArgs e)
         {
             listFiles.Clear();
             fileExplorer.Items.Clear();
@@ -44,7 +41,6 @@ namespace CsharpZip
                 {
                     txtPath.Text = fbd.SelectedPath;
                     DirectoryInfo directoryInfo = new DirectoryInfo(fbd.SelectedPath);
-                    FileStream fileStream = null;
 
                     FileInfo[] fileInfo = directoryInfo.GetFiles();
                     DirectoryInfo[] subdirectoryInfo = directoryInfo.GetDirectories();
@@ -163,7 +159,7 @@ namespace CsharpZip
             extWin.ShowDialog();
         }
 
-        private void fileExplorer_ItemDrag(object sender, ItemDragEventArgs e)
+        private void FileExplorer_ItemDrag(object sender, ItemDragEventArgs e)
         {
 
             int i = 0;

@@ -1,27 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ionic.Zip;
+using System;
 using System.Windows.Forms;
-using SharpCompress.Compressors;
-using SharpCompress.Archives;
-using SharpCompress.Archives.Zip;
-using SharpCompress.Writers;
-using System.IO.Compression;
 using System.IO;
-using SharpCompress.Common;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
+using ICSharpCode.SharpZipLib.Tar;
+using ICSharpCode.SharpZipLib.GZip;
+using ICSharpCode.SharpZipLib.BZip2;
 
 namespace CsharpZip
 {
+    
     public partial class Compress : Form
     {
-        public string opt { get; set; }
         public Compress()
         {
             InitializeComponent();
@@ -42,142 +31,69 @@ namespace CsharpZip
         {
             var filesList = Form1.filesList;
             string savePath = txtSavePath.Text;
-            string fileName = savePath + @"\" + txtFileName.Text + ".zip";
+            string fileName = savePath + @"\" + txtFileName.Text;
             if (optZip.Checked == true)
             {
                 if (chkEncrypt.Checked == true)
                 {
                     if (txtPass.Text == txtPass2.Text)
                     {
-                        using (var zip = File.OpenWrite(fileName))
-                        using (var zipWriter = WriterFactory.Open(zip, ArchiveType.Zip, CompressionType.Deflate))
+                        //do encrypt
+                        using (ZipFile zip = new ZipFile())
                         {
-                            foreach (var filePath in filesList)
+                            zip.Password = txtPass2.Text;
+                            foreach (string file in filesList)
                             {
-                                zipWriter.Write(Path.GetFileName(filePath), filePath);
+                                zip.AddFile(file, "");
                             }
+                            zip.Save(fileName);
                         }
                     }
                 }
-                EncryptFile(fileName, fileName, txtPass.Text);
-                DecryptFile(fileName, fileName + "_lala.zip", txtPass.Text);
-                /*else
+               
+                else
                 {
                     //Compress Zip
-                    using (var zip = File.OpenWrite(fileName))
-                    using (var zipWriter = WriterFactory.Open(zip, ArchiveType.Zip, CompressionType.Deflate))
+                    using (ZipFile zip = new ZipFile())
                     {
-                        foreach (var filePath in filesList)
+                        foreach(string file in filesList)
                         {
-                            zipWriter.Write(Path.GetFileName(filePath), filePath);
+                            zip.AddFile(file, "");
                         }
+                        zip.Save(fileName + ".zip");
                     }
-                }*/
-
+                }
             }
-            else if (optRar.Checked)
+            else if (optBz.Checked)
             {
-                //Compress RAR
-                using (var rar = File.OpenWrite(savePath + @"\" + txtFileName.Text + ".rar"))
-                using (var rarWriter = WriterFactory.Open(rar, ArchiveType.Rar, CompressionType.Rar))
+                using (Stream bzFile = File.Create(fileName + ".tar.bz2"))
+                using (Stream bzipStream = new BZip2OutputStream(bzFile))
+                using (TarArchive tar = TarArchive.CreateOutputTarArchive(bzipStream))
                 {
-                    foreach(var filePath in filesList)
+                    foreach (string file in filesList)
                     {
-                        rarWriter.Write(Path.GetFileName(filePath), filePath);
+                        TarEntry tarEntry = TarEntry.CreateEntryFromFile(file);
+                        tarEntry.Name = Path.GetFileName(file);
+                        tar.WriteEntry(tarEntry, false);
                     }
                 }
             }
             else if (optTar.Checked)
             {
-                //Compress TAR
-                using (var tar = File.OpenWrite(savePath + @"\" + txtFileName.Text + ".tar.bz2"))
-                using (var tarWriter = WriterFactory.Open(tar, ArchiveType.Tar, CompressionType.BZip2))
+                using (Stream tarFile = File.Create(fileName + ".tgz"))
+                using (Stream gzipStream = new GZipOutputStream(tarFile))
+                using (TarArchive tar = TarArchive.CreateOutputTarArchive(gzipStream))
                 {
-                    foreach (var filePath in filesList)
+                    foreach (string file in filesList)
                     {
-                        tarWriter.Write(Path.GetFileName(filePath), filePath);
+                        TarEntry tarEntry = TarEntry.CreateEntryFromFile(file);
+                        tarEntry.Name = Path.GetFileName(file);
+                        tar.WriteEntry(tarEntry, false);
                     }
                 }
-            }
-            if (chkEncrypt.Checked)
-            {
 
+             //   TarOutputStream
             }
         }
-
-        private static void EncryptFile(string inputFile, string outputFile, string skey)
-        {
-            try
-            {
-                using (RijndaelManaged aes = new RijndaelManaged())
-                {
-                    byte[] key = ASCIIEncoding.UTF8.GetBytes(skey);
-
-                    /* This is for demostrating purposes only. 
-                     * Ideally you will want the IV key to be different from your key and you should always generate a new one for each encryption in other to achieve maximum security*/
-                    byte[] IV = ASCIIEncoding.UTF8.GetBytes(skey);
-
-                    using (FileStream fsCrypt = new FileStream(outputFile, FileMode.Create))
-                    {
-                        using (ICryptoTransform encryptor = aes.CreateEncryptor(key, IV))
-                        {
-                            using (CryptoStream cs = new CryptoStream(fsCrypt, encryptor, CryptoStreamMode.Write))
-                            {
-                                using (FileStream fsIn = new FileStream(inputFile, FileMode.Open))
-                                {
-                                    int data;
-                                    while ((data = fsIn.ReadByte()) != -1)
-                                    {
-                                        cs.WriteByte((byte)data);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Encription Fail" + ex);
-            }
-        }
-
-        private static void DecryptFile(string inputFile, string outputFile, string skey)
-        {
-            try
-            {
-                using (RijndaelManaged aes = new RijndaelManaged())
-                {
-                    byte[] key = ASCIIEncoding.UTF8.GetBytes(skey);
-
-                    /* This is for demostrating purposes only. 
-                     * Ideally you will want the IV key to be different from your key and you should always generate a new one for each encryption in other to achieve maximum security*/
-                    byte[] IV = ASCIIEncoding.UTF8.GetBytes(skey);
-
-                    using (FileStream fsCrypt = new FileStream(inputFile, FileMode.Open))
-                    {
-                        using (FileStream fsOut = new FileStream(outputFile, FileMode.Create))
-                        {
-                            using (ICryptoTransform decryptor = aes.CreateDecryptor(key, IV))
-                            {
-                                using (CryptoStream cs = new CryptoStream(fsCrypt, decryptor, CryptoStreamMode.Read))
-                                {
-                                    int data;
-                                    while ((data = cs.ReadByte()) != -1)
-                                    {
-                                        fsOut.WriteByte((byte)data);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Decription Fail"+ex);
-            }
-        }
-
     }
 }

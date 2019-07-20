@@ -31,7 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Compress));
             this.grpFileType = new System.Windows.Forms.GroupBox();
             this.optTar = new System.Windows.Forms.RadioButton();
-            this.optRar = new System.Windows.Forms.RadioButton();
+            this.optBz = new System.Windows.Forms.RadioButton();
             this.optZip = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.chkEncrypt = new System.Windows.Forms.CheckBox();
@@ -53,7 +53,7 @@
             // grpFileType
             // 
             this.grpFileType.Controls.Add(this.optTar);
-            this.grpFileType.Controls.Add(this.optRar);
+            this.grpFileType.Controls.Add(this.optBz);
             this.grpFileType.Controls.Add(this.optZip);
             this.grpFileType.Location = new System.Drawing.Point(13, 13);
             this.grpFileType.Name = "grpFileType";
@@ -67,22 +67,22 @@
             this.optTar.AutoSize = true;
             this.optTar.Location = new System.Drawing.Point(7, 68);
             this.optTar.Name = "optTar";
-            this.optTar.Size = new System.Drawing.Size(47, 17);
+            this.optTar.Size = new System.Drawing.Size(73, 17);
             this.optTar.TabIndex = 2;
             this.optTar.TabStop = true;
-            this.optTar.Text = "TAR";
+            this.optTar.Text = "TAR GZip";
             this.optTar.UseVisualStyleBackColor = true;
             // 
-            // optRar
+            // optBz
             // 
-            this.optRar.AutoSize = true;
-            this.optRar.Location = new System.Drawing.Point(7, 44);
-            this.optRar.Name = "optRar";
-            this.optRar.Size = new System.Drawing.Size(48, 17);
-            this.optRar.TabIndex = 1;
-            this.optRar.TabStop = true;
-            this.optRar.Text = "RAR";
-            this.optRar.UseVisualStyleBackColor = true;
+            this.optBz.AutoSize = true;
+            this.optBz.Location = new System.Drawing.Point(7, 44);
+            this.optBz.Name = "optBz";
+            this.optBz.Size = new System.Drawing.Size(53, 17);
+            this.optBz.TabIndex = 1;
+            this.optBz.TabStop = true;
+            this.optBz.Text = "BZip2";
+            this.optBz.UseVisualStyleBackColor = true;
             // 
             // optZip
             // 
@@ -237,7 +237,7 @@
 
         private System.Windows.Forms.GroupBox grpFileType;
         private System.Windows.Forms.RadioButton optTar;
-        private System.Windows.Forms.RadioButton optRar;
+        private System.Windows.Forms.RadioButton optBz;
         private System.Windows.Forms.RadioButton optZip;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label4;

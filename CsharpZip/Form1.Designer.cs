@@ -97,7 +97,7 @@
             this.odpriToolStripMenuItem.Name = "odpriToolStripMenuItem";
             this.odpriToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.odpriToolStripMenuItem.Text = "Odpri";
-            this.odpriToolStripMenuItem.Click += new System.EventHandler(this.btnOpen_Click);
+            this.odpriToolStripMenuItem.Click += new System.EventHandler(this.BtnOpen_Click);
             // 
             // stisniToolStripMenuItem
             // 
@@ -154,7 +154,7 @@
             this.btnOpen.TabIndex = 5;
             this.btnOpen.Text = "&Odpri";
             this.btnOpen.UseVisualStyleBackColor = true;
-            this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
+            this.btnOpen.Click += new System.EventHandler(this.BtnOpen_Click);
             // 
             // btnCompress
             // 
@@ -234,7 +234,7 @@
             this.fileExplorer.TabIndex = 13;
             this.fileExplorer.UseCompatibleStateImageBehavior = false;
             this.fileExplorer.View = System.Windows.Forms.View.Details;
-            this.fileExplorer.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.fileExplorer_ItemDrag);
+            this.fileExplorer.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.FileExplorer_ItemDrag);
             this.fileExplorer.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ListItem_DoubleClick);
             // 
             // file
