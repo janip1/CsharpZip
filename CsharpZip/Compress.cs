@@ -46,7 +46,7 @@ namespace CsharpZip
                             {
                                 zip.AddFile(file, "");
                             }
-                            zip.Save(fileName);
+                            zip.Save(fileName + ".zip");
                         }
                     }
                 }
@@ -63,6 +63,17 @@ namespace CsharpZip
                         zip.Save(fileName + ".zip");
                     }
                 }
+
+                if (File.Exists(fileName + ".zip"))
+                {
+                    this.Hide();
+                    MessageBox.Show("Datoteka uspešno kreirana", "Uspeh!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Prišlo je do napake, poskusite ponovno.", "Napaka", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+                }
+                
             }
             else if (optBz.Checked)
             {
@@ -77,12 +88,21 @@ namespace CsharpZip
                         tar.WriteEntry(tarEntry, false);
                     }
                 }
+                if (File.Exists(fileName + ".tar.bz2"))
+                {
+                    this.Hide();
+                    MessageBox.Show("Datoteka uspešno kreirana", "Uspeh!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Prišlo je do napake, poskusite ponovno.", "Napaka", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+                }
             }
             else if (optTar.Checked)
             {
-                using (Stream tarFile = File.Create(fileName + ".tgz"))
-                using (Stream gzipStream = new GZipOutputStream(tarFile))
-                using (TarArchive tar = TarArchive.CreateOutputTarArchive(gzipStream))
+                using (Stream tarFile = File.Create(fileName + ".tar"))
+                using (Stream tarStream = new TarOutputStream(tarFile))
+                using (TarArchive tar = TarArchive.CreateOutputTarArchive(tarStream))
                 {
                     foreach (string file in filesList)
                     {
@@ -91,9 +111,37 @@ namespace CsharpZip
                         tar.WriteEntry(tarEntry, false);
                     }
                 }
-
-             //   TarOutputStream
+                if (File.Exists(fileName + ".tar"))
+                {
+                    this.Hide();
+                    MessageBox.Show("Datoteka uspešno kreirana", "Uspeh!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Prišlo je do napake, poskusite ponovno.", "Napaka", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+                }
             }
+        }
+
+        private void OptBz_CheckedChanged(object sender, EventArgs e)
+        {
+            chkEncrypt.Enabled = false;
+            txtPass.Enabled = false;
+            txtPass2.Enabled = false;
+        }
+
+        private void OptTar_CheckedChanged(object sender, EventArgs e)
+        {
+            chkEncrypt.Enabled = false;
+            txtPass.Enabled = false;
+            txtPass2.Enabled = false;
+        }
+
+        private void OptZip_CheckedChanged(object sender, EventArgs e)
+        {
+            chkEncrypt.Enabled = true;
+            txtPass.Enabled = true;
+            txtPass2.Enabled = true;
         }
     }
 }

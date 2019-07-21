@@ -72,6 +72,7 @@
             this.optTar.TabStop = true;
             this.optTar.Text = "TAR GZip";
             this.optTar.UseVisualStyleBackColor = true;
+            this.optTar.CheckedChanged += new System.EventHandler(this.OptTar_CheckedChanged);
             // 
             // optBz
             // 
@@ -83,6 +84,7 @@
             this.optBz.TabStop = true;
             this.optBz.Text = "BZip2";
             this.optBz.UseVisualStyleBackColor = true;
+            this.optBz.CheckedChanged += new System.EventHandler(this.OptBz_CheckedChanged);
             // 
             // optZip
             // 
@@ -94,6 +96,7 @@
             this.optZip.TabStop = true;
             this.optZip.Text = "ZIP";
             this.optZip.UseVisualStyleBackColor = true;
+            this.optZip.CheckedChanged += new System.EventHandler(this.OptZip_CheckedChanged);
             // 
             // groupBox2
             // 
@@ -184,6 +187,7 @@
             // 
             this.btnBrowse.BackColor = System.Drawing.Color.Transparent;
             this.btnBrowse.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnBrowse.BackgroundImage")));
+            this.btnBrowse.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnBrowse.Location = new System.Drawing.Point(343, 151);
             this.btnBrowse.Name = "btnBrowse";
             this.btnBrowse.Size = new System.Drawing.Size(27, 21);

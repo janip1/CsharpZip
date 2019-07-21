@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.datotekaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.novaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -56,7 +57,7 @@
             this.filetype = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.path = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.icon = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.oneUp = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -179,6 +180,9 @@
             // 
             // statusStrip1
             // 
+            this.statusStrip1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.statusStrip1.AutoSize = false;
+            this.statusStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2,
@@ -186,6 +190,7 @@
             this.statusStrip1.Location = new System.Drawing.Point(0, 332);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(642, 22);
+            this.statusStrip1.Stretch = false;
             this.statusStrip1.TabIndex = 8;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -204,7 +209,6 @@
             // 
             this.toolStripProgressBar2.Name = "toolStripProgressBar2";
             this.toolStripProgressBar2.Size = new System.Drawing.Size(100, 16);
-            this.toolStripProgressBar2.Click += new System.EventHandler(this.ToolStripProgressBar2_Click);
             // 
             // openFileDialog1
             // 
@@ -216,12 +220,10 @@
             this.txtPath.Name = "txtPath";
             this.txtPath.Size = new System.Drawing.Size(483, 20);
             this.txtPath.TabIndex = 10;
-            this.txtPath.TextChanged += new System.EventHandler(this.Path_TextChanged);
             // 
             // fileExplorer
             // 
             this.fileExplorer.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.icon,
             this.file,
             this.size,
             this.filetype,
@@ -256,18 +258,25 @@
             // imageList1
             // 
             this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-            this.imageList1.ImageSize = new System.Drawing.Size(32, 32);
+            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // icon
+            // oneUp
             // 
-            this.icon.Text = "";
+            this.oneUp.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("oneUp.BackgroundImage")));
+            this.oneUp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.oneUp.Location = new System.Drawing.Point(559, 35);
+            this.oneUp.Name = "oneUp";
+            this.oneUp.Size = new System.Drawing.Size(20, 20);
+            this.oneUp.TabIndex = 14;
+            this.oneUp.UseVisualStyleBackColor = true;
+            this.oneUp.Click += new System.EventHandler(this.OneUp_Click);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(642, 354);
+            this.Controls.Add(this.oneUp);
             this.Controls.Add(this.fileExplorer);
             this.Controls.Add(this.txtPath);
             this.Controls.Add(this.statusStrip1);
@@ -278,7 +287,7 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "CsharpZip";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
@@ -316,7 +325,7 @@
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar2;
-        private System.Windows.Forms.ColumnHeader icon;
+        private System.Windows.Forms.Button oneUp;
     }
 }
 

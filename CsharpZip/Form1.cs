@@ -9,7 +9,7 @@ namespace CsharpZip
 {
     public partial class Form1 : Form
     {
-        List<string> listFiles = new List<string>();
+        //List<string> listFiles = new List<string>();
         public static StringCollection filesList = null;
         public Form1()
         {
@@ -33,105 +33,14 @@ namespace CsharpZip
 
         private void BtnOpen_Click(object sender, EventArgs e)
         {
-            listFiles.Clear();
             fileExplorer.Items.Clear();
             using (FolderBrowserDialog fbd = new FolderBrowserDialog() { Description = "Izberi mapo" })
             {
                 if (fbd.ShowDialog() == DialogResult.OK)
                 {
                     txtPath.Text = fbd.SelectedPath;
-                    DirectoryInfo directoryInfo = new DirectoryInfo(fbd.SelectedPath);
 
-                    FileInfo[] fileInfo = directoryInfo.GetFiles();
-                    DirectoryInfo[] subdirectoryInfo = directoryInfo.GetDirectories();
-
-                    foreach (DirectoryInfo subDirectory in subdirectoryInfo)
-                    {
-                        listFiles.Add(subDirectory.FullName);
-                        ListViewItem row = new ListViewItem();
-                        Icon iconForFile = DefaultIcons.FolderLarge;
-                        
-                        imageList1.Images.Add(subDirectory.FullName, iconForFile);
-                        row.ImageKey = subDirectory.FullName;
-                        row.SubItems.Add(subDirectory.Name);
-                        fileExplorer.Items.Add(row);
-                    }
-
-                    foreach (string item in Directory.GetFiles(fbd.SelectedPath))
-                    {
-                        FileInfo file = new FileInfo(item);
-                        Icon iconForFile = SystemIcons.WinLogo;
-
-                        listFiles.Add(file.FullName);
-                        ListViewItem row = new ListViewItem();
-
-                        iconForFile = Icon.ExtractAssociatedIcon(file.FullName);
-                        imageList1.Images.Add(file.Extension, iconForFile);
-                        row.ImageKey = file.Extension;
-
-                        row.SubItems.Add(file.Name);
-                        row.SubItems.Add(file.Length.ToString());
-                        row.SubItems.Add(file.Extension);
-                        row.SubItems.Add(file.Directory.ToString());
-                        fileExplorer.Items.Add(row);
-                    }
-                }
-            }
-        }
-
-        private void Path_TextChanged(object sender, EventArgs e)
-        {
-            if (Directory.GetCurrentDirectory() == txtPath.Text)
-            {
-                toolStripStatusLabel2.Text = "Direktorij naložen!";
-            }
-            else
-            {
-                if (Directory.Exists(txtPath.Text))
-                {
-                    DirectoryInfo directoryInfo = new DirectoryInfo(txtPath.Text);
-
-                    FileInfo[] fileInfo = directoryInfo.GetFiles();
-                    DirectoryInfo[] subdirectoryInfo = directoryInfo.GetDirectories();
-
-                    foreach (DirectoryInfo subDirectory in subdirectoryInfo)
-                    {
-                        listFiles.Add(subDirectory.FullName);
-                        ListViewItem row = new ListViewItem();
-                        Icon iconForFile = DefaultIcons.FolderLarge;
-
-                        imageList1.Images.Add(subDirectory.FullName, iconForFile);
-                        row.ImageKey = subDirectory.FullName;
-                        row.SubItems.Add(subDirectory.Name);
-                        fileExplorer.Items.Add(row);
-                    }
-
-                    listFiles.Clear();
-                    fileExplorer.Items.Clear();
-                    foreach (string item in Directory.GetFiles(txtPath.Text))
-                    {
-                        FileInfo file = new FileInfo(item);
-                        Icon iconForFile = SystemIcons.WinLogo;
-
-                        listFiles.Add(file.FullName);
-                        ListViewItem row = new ListViewItem();
-
-                        iconForFile = Icon.ExtractAssociatedIcon(file.FullName);
-                        imageList1.Images.Add(file.Extension, iconForFile);
-                        row.ImageKey = file.Extension;
-                        
-                        row.SubItems.Add(file.Name);
-                        row.SubItems.Add(file.Length.ToString());
-                        row.SubItems.Add(file.Extension);
-                        row.SubItems.Add(file.Directory.ToString());
-                        fileExplorer.Items.Add(row);
-                    }
-                }
-                else
-                {
-                    listFiles.Clear();
-                    fileExplorer.Items.Clear();
-                    toolStripStatusLabel2.Text = "Direktorij ne obstaja!";
+                    ListDirectory(fbd.SelectedPath);
                 }
             }
         }
@@ -142,8 +51,8 @@ namespace CsharpZip
             filesList = new StringCollection();
             foreach (ListViewItem item in fileExplorer.SelectedItems)
             {
-                string file = item.SubItems[1].Text;
-                filesList.Add(item.SubItems[4].Text + @"\" + file);
+                string file = item.SubItems[0].Text;
+                filesList.Add(item.SubItems[3].Text + @"\" + file);
                 i++;
             }
             DataObject dataObject = new DataObject();
@@ -161,14 +70,13 @@ namespace CsharpZip
 
         private void FileExplorer_ItemDrag(object sender, ItemDragEventArgs e)
         {
-
             int i = 0;
 
             StringCollection filePath = new StringCollection();
             foreach (ListViewItem item in fileExplorer.SelectedItems)
             {
-                string file = item.SubItems[1].Text;
-                filePath.Add(item.SubItems[4].Text + @"\" + file);
+                string file = item.SubItems[0].Text;
+                filePath.Add(item.SubItems[3].Text + @"\" + file);
                 i++;
             }
             DataObject dataObject = new DataObject();
@@ -182,61 +90,80 @@ namespace CsharpZip
             {
                 foreach (ListViewItem item in fileExplorer.SelectedItems)
                 {
-                    string file = item.SubItems[1].Text;
+                    string file = item.SubItems[0].Text;
                     string path = txtPath.Text + @"\" + file;
-                    listFiles.Clear();
                     fileExplorer.Items.Clear();
                     txtPath.Text = path;
+
+                    if(Directory.Exists(path))
+                        ListDirectory(path);
                 }
             }
         }
 
-        private void ToolStripProgressBar2_Click(object sender, EventArgs e)
+        private void OneUp_Click(object sender, EventArgs e)
         {
+            fileExplorer.Items.Clear();
 
+            string input = txtPath.Text;
+            int index = input.LastIndexOf(@"\");
+            if (index > 0)
+            {
+                txtPath.Text = input.Substring(0, index);
+                ListDirectory(txtPath.Text);
+            }   
         }
 
-
-
-        /*
-        private static void DecryptFile(string inputFile, string outputFile, string skey)
+        private void ListDirectory(string path)
         {
-            try
+            DirectoryInfo directory = new DirectoryInfo(path);
+            DirectoryInfo[] subdirectories = directory.GetDirectories();
+
+            if (subdirectories.Length != 0)
             {
-                using (RijndaelManaged aes = new RijndaelManaged())
+                foreach (DirectoryInfo subDirectory in subdirectories)
                 {
-                    byte[] key = ASCIIEncoding.UTF8.GetBytes(skey);
+                    Icon iconForFile = DefaultIcons.FolderLarge;
+                    ListViewItem row = new ListViewItem(subDirectory.Name);
+                    imageList1.Images.Add(subDirectory.FullName, iconForFile);
+                    row.ImageKey = subDirectory.FullName;
+                    fileExplorer.Items.Add(row);
+                }
 
-                    /* This is for demostrating purposes only. 
-                     * Ideally you will want the IV key to be different from your key and you should always generate a new one for each encryption in other to achieve maximum security
-                    byte[] IV = ASCIIEncoding.UTF8.GetBytes(skey);
+                foreach (string item in Directory.GetFiles(path))
+                {
+                    FileInfo file = new FileInfo(item);
+                    Icon iconForFile = SystemIcons.WinLogo;
 
-                    using (FileStream fsCrypt = new FileStream(inputFile, FileMode.Open))
-                    {
-                        using (FileStream fsOut = new FileStream(outputFile, FileMode.Create))
-                        {
-                            using (ICryptoTransform decryptor = aes.CreateDecryptor(key, IV))
-                            {
-                                using (CryptoStream cs = new CryptoStream(fsCrypt, decryptor, CryptoStreamMode.Read))
-                                {
-                                    int data;
-                                    while ((data = cs.ReadByte()) != -1)
-                                    {
-                                        fsOut.WriteByte((byte)data);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    ListViewItem row = new ListViewItem(file.Name);
+
+                    iconForFile = Icon.ExtractAssociatedIcon(file.FullName);
+                    imageList1.Images.Add(file.Extension, iconForFile);
+                    row.ImageKey = file.Extension;
+                    row.SubItems.Add(file.Length.ToString());
+                    row.SubItems.Add(file.Extension);
+                    row.SubItems.Add(file.Directory.ToString());
+                    fileExplorer.Items.Add(row);
                 }
             }
-            catch (Exception ex)
+            else
             {
-                // failed to decrypt file
+                foreach (string item in Directory.GetFiles(path))
+                {
+                    FileInfo file = new FileInfo(item);
+                    Icon iconForFile = SystemIcons.WinLogo;
+                    ListViewItem row = new ListViewItem(file.Name);
+
+                    iconForFile = Icon.ExtractAssociatedIcon(file.FullName);
+                    imageList1.Images.Add(file.Extension, iconForFile);
+                    row.ImageKey = file.Extension;
+                    row.SubItems.Add(file.Length.ToString());
+                    row.SubItems.Add(file.Extension);
+                    row.SubItems.Add(file.Directory.ToString());
+                    fileExplorer.Items.Add(row);
+                }
             }
-        }*/
-
-
+        }
 
     }
 }
