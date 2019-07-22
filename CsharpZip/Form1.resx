@@ -135,11 +135,11 @@
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="oneUp.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAC7SURBVDhPzZMxCkIxDIZ7BI/y7uLqSZycnd4B3MULOL5ZEDyBPBdxEqpL19iEJuS1Mb7RwEdD
-        2v8rFBoAIFiVUlpkYgY8PMHmOZ7gelx/ZSLQVuY2bOF+3sMrvhtMQX3DL/5U8LgciPqwRSPAIK7cWyFN
-        I0BW/UDMkYggNx2Hw3JHzJFoQdThWmKFES2QgA7jinseIuDbWDCZecWCDH0cLZCZV/wGGXrISoCzWI7a
-        VQQd9iUklBnt2RXCB8ggopJWFuKtAAAAAElFTkSuQmCC
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAALtJREFUOE/N
+        kzEKQjEMhnsEj/Lu4upJnJyd3gHcxQs4vlkQPIE8F3ESqkvX2IQm5LUxvtHAR0Pa/ysUGgAgWJVSWmRi
+        Bjw8weY5nuB6XH9lItBW5jZs4X7ewyu+G0xBfcMv/lTwuByI+rBFI8AgrtxbIU0jQFb9QMyRiCA3HYfD
+        ckfMkWhB1OFaYoURLZCADuOKex4i4NtYMJl5xYIMfRwtkJlX/AYZeshKgLNYjtpVBB32JSSUGe3ZFcIH
+        yCCiklYW4q0AAAAASUVORK5CYII=
 </value>
   </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">

@@ -1,4 +1,8 @@
-﻿using System;
+﻿using ICSharpCode.SharpZipLib.Core;
+using ICSharpCode.SharpZipLib.Zip;
+using ICSharpCode.SharpZipLib.Tar;
+using ICSharpCode.SharpZipLib.BZip2;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Drawing;
@@ -9,16 +13,10 @@ namespace CsharpZip
 {
     public partial class Form1 : Form
     {
-        //List<string> listFiles = new List<string>();
         public static StringCollection filesList = null;
         public Form1()
         {
             InitializeComponent();
-        }
-
-        private void EkstrahirajToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void IzhodToolStripMenuItem_Click(object sender, EventArgs e)
@@ -31,7 +29,7 @@ namespace CsharpZip
             Application.Restart();
         }
 
-        private void BtnOpen_Click(object sender, EventArgs e)
+        private void BtnOpenFolder_Click(object sender, EventArgs e)
         {
             fileExplorer.Items.Clear();
             using (FolderBrowserDialog fbd = new FolderBrowserDialog() { Description = "Izberi mapo" })
@@ -39,8 +37,22 @@ namespace CsharpZip
                 if (fbd.ShowDialog() == DialogResult.OK)
                 {
                     txtPath.Text = fbd.SelectedPath;
-
+                    
                     ListDirectory(fbd.SelectedPath);
+                }
+            }
+        }
+
+        private void BtnOpenFile_Click(object sender, EventArgs e)
+        {
+            fileExplorer.Items.Clear();
+            using (openFileDialog1)
+            {
+                if(openFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = openFileDialog1.InitialDirectory + openFileDialog1.FileName;
+
+                    ListFileContents(filePath);
                 }
             }
         }
@@ -64,6 +76,14 @@ namespace CsharpZip
 
         private void BtnExtract_Click(object sender, EventArgs e)
         {
+            filesList = new StringCollection();
+            foreach (ListViewItem item in fileExplorer.SelectedItems)
+            {
+                string file = item.SubItems[0].Text;
+                filesList.Add(item.SubItems[3].Text + @"\" + file);
+            }
+            DataObject dataObject = new DataObject();
+            dataObject.SetFileDropList(filesList);
             Extract extWin = new Extract();
             extWin.ShowDialog();
         }
@@ -163,6 +183,81 @@ namespace CsharpZip
                     fileExplorer.Items.Add(row);
                 }
             }
+        }
+
+        private void ListFileContents(string path)
+        {
+            fileExplorer.Items.Clear();
+            if (path.Contains(".zip"))
+            {
+                using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                using (var zf = new ZipFile(fs))
+                {
+                    foreach (ZipEntry item in zf)
+                    {
+                        if (item.IsDirectory)
+                            continue;
+
+                        Icon iconForFile = SystemIcons.WinLogo;
+                        ListViewItem row = new ListViewItem(item.Name);
+
+                        iconForFile = Icon.ExtractAssociatedIcon(path);
+                        imageList1.Images.Add(item.GetType().ToString(), iconForFile);
+                        row.ImageKey = item.GetType().ToString();
+                        row.SubItems.Add(item.Size.ToString());
+                        row.SubItems.Add(item.GetType().ToString());
+                        
+                        fileExplorer.Items.Add(row);
+                    }
+                }        
+            }
+            else if (path.Contains(".tgz"))
+            {
+                using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                using (var tarFile = new TarInputStream(fs))
+                {
+                    TarEntry entry;
+
+                    while ((entry = tarFile.GetNextEntry()) != null)
+                    {
+                        Icon iconForFile = SystemIcons.WinLogo;
+                        ListViewItem row = new ListViewItem(entry.Name);
+
+                        iconForFile = Icon.ExtractAssociatedIcon(path);
+                        imageList1.Images.Add(Path.GetExtension(entry.Name), iconForFile);
+                        row.ImageKey = Path.GetExtension(entry.Name);
+                        row.SubItems.Add(entry.Size.ToString());
+                        row.SubItems.Add(Path.GetExtension(entry.Name));
+
+                        fileExplorer.Items.Add(row);
+                    }
+                }
+            }
+            else if (path.Contains(".tar.bz2"))
+            {
+                using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                using (var bzFile = new BZip2InputStream(fs))
+                using (var tarFile = new TarInputStream(bzFile))
+                {
+                    TarEntry entry;
+
+                    while ((entry = tarFile.GetNextEntry()) != null)
+                    {
+                        Icon iconForFile = SystemIcons.WinLogo;
+                        ListViewItem row = new ListViewItem(entry.Name);
+
+                        iconForFile = Icon.ExtractAssociatedIcon(path);
+                        imageList1.Images.Add(Path.GetExtension(entry.Name), iconForFile);
+                        row.ImageKey = Path.GetExtension(entry.Name);
+                        row.SubItems.Add(entry.Size.ToString());
+                        row.SubItems.Add(Path.GetExtension(entry.Name));
+
+                        fileExplorer.Items.Add(row);
+                    }
+                }
+            }
+
+
         }
 
     }

@@ -41,7 +41,7 @@
             this.pomočToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.oProgramuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
-            this.btnOpen = new System.Windows.Forms.Button();
+            this.btnOpenFolder = new System.Windows.Forms.Button();
             this.btnCompress = new System.Windows.Forms.Button();
             this.btnExtract = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -58,6 +58,7 @@
             this.path = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.oneUp = new System.Windows.Forms.Button();
+            this.btnOpenFile = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -69,7 +70,7 @@
             this.pomočToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(642, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(670, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -98,7 +99,6 @@
             this.odpriToolStripMenuItem.Name = "odpriToolStripMenuItem";
             this.odpriToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.odpriToolStripMenuItem.Text = "Odpri";
-            this.odpriToolStripMenuItem.Click += new System.EventHandler(this.BtnOpen_Click);
             // 
             // stisniToolStripMenuItem
             // 
@@ -111,6 +111,7 @@
             this.razširiToolStripMenuItem.Name = "razširiToolStripMenuItem";
             this.razširiToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.razširiToolStripMenuItem.Text = "Razširi";
+            this.razširiToolStripMenuItem.Click += new System.EventHandler(this.BtnExtract_Click);
             // 
             // toolStripMenuItem1
             // 
@@ -147,21 +148,21 @@
             this.label1.TabIndex = 3;
             this.label1.Text = "Datoteka";
             // 
-            // btnOpen
+            // btnOpenFolder
             // 
-            this.btnOpen.Location = new System.Drawing.Point(559, 69);
-            this.btnOpen.Name = "btnOpen";
-            this.btnOpen.Size = new System.Drawing.Size(75, 23);
-            this.btnOpen.TabIndex = 5;
-            this.btnOpen.Text = "&Odpri";
-            this.btnOpen.UseVisualStyleBackColor = true;
-            this.btnOpen.Click += new System.EventHandler(this.BtnOpen_Click);
+            this.btnOpenFolder.Location = new System.Drawing.Point(559, 98);
+            this.btnOpenFolder.Name = "btnOpenFolder";
+            this.btnOpenFolder.Size = new System.Drawing.Size(99, 23);
+            this.btnOpenFolder.TabIndex = 5;
+            this.btnOpenFolder.Text = "Odpri &mapo";
+            this.btnOpenFolder.UseVisualStyleBackColor = true;
+            this.btnOpenFolder.Click += new System.EventHandler(this.BtnOpenFolder_Click);
             // 
             // btnCompress
             // 
-            this.btnCompress.Location = new System.Drawing.Point(559, 99);
+            this.btnCompress.Location = new System.Drawing.Point(559, 128);
             this.btnCompress.Name = "btnCompress";
-            this.btnCompress.Size = new System.Drawing.Size(75, 23);
+            this.btnCompress.Size = new System.Drawing.Size(99, 23);
             this.btnCompress.TabIndex = 6;
             this.btnCompress.Text = "Stisni";
             this.btnCompress.UseVisualStyleBackColor = true;
@@ -170,9 +171,9 @@
             // btnExtract
             // 
             this.btnExtract.Enabled = false;
-            this.btnExtract.Location = new System.Drawing.Point(559, 129);
+            this.btnExtract.Location = new System.Drawing.Point(559, 158);
             this.btnExtract.Name = "btnExtract";
-            this.btnExtract.Size = new System.Drawing.Size(75, 23);
+            this.btnExtract.Size = new System.Drawing.Size(99, 23);
             this.btnExtract.TabIndex = 7;
             this.btnExtract.Text = "Razširi";
             this.btnExtract.UseVisualStyleBackColor = true;
@@ -218,7 +219,7 @@
             // 
             this.txtPath.Location = new System.Drawing.Point(70, 35);
             this.txtPath.Name = "txtPath";
-            this.txtPath.Size = new System.Drawing.Size(483, 20);
+            this.txtPath.Size = new System.Drawing.Size(463, 20);
             this.txtPath.TabIndex = 10;
             // 
             // fileExplorer
@@ -265,24 +266,35 @@
             // 
             this.oneUp.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("oneUp.BackgroundImage")));
             this.oneUp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.oneUp.Location = new System.Drawing.Point(559, 35);
+            this.oneUp.Location = new System.Drawing.Point(533, 35);
             this.oneUp.Name = "oneUp";
             this.oneUp.Size = new System.Drawing.Size(20, 20);
             this.oneUp.TabIndex = 14;
             this.oneUp.UseVisualStyleBackColor = true;
             this.oneUp.Click += new System.EventHandler(this.OneUp_Click);
             // 
+            // btnOpenFile
+            // 
+            this.btnOpenFile.Location = new System.Drawing.Point(559, 69);
+            this.btnOpenFile.Name = "btnOpenFile";
+            this.btnOpenFile.Size = new System.Drawing.Size(99, 23);
+            this.btnOpenFile.TabIndex = 15;
+            this.btnOpenFile.Text = "Odpri &datoteko";
+            this.btnOpenFile.UseVisualStyleBackColor = true;
+            this.btnOpenFile.Click += new System.EventHandler(this.BtnOpenFile_Click);
+            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(642, 354);
+            this.ClientSize = new System.Drawing.Size(670, 354);
+            this.Controls.Add(this.btnOpenFile);
             this.Controls.Add(this.oneUp);
             this.Controls.Add(this.fileExplorer);
             this.Controls.Add(this.txtPath);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.btnExtract);
             this.Controls.Add(this.btnCompress);
-            this.Controls.Add(this.btnOpen);
+            this.Controls.Add(this.btnOpenFolder);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -307,7 +319,7 @@
         private System.Windows.Forms.ToolStripMenuItem pomočToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem oProgramuToolStripMenuItem;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button btnOpen;
+        private System.Windows.Forms.Button btnOpenFolder;
         private System.Windows.Forms.Button btnCompress;
         private System.Windows.Forms.Button btnExtract;
         private System.Windows.Forms.StatusStrip statusStrip1;
@@ -326,6 +338,7 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar2;
         private System.Windows.Forms.Button oneUp;
+        private System.Windows.Forms.Button btnOpenFile;
     }
 }
 
