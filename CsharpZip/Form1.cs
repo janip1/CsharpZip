@@ -88,10 +88,11 @@ namespace CsharpZip
                 {
                     string file = item.SubItems[0].Text;
                     filesList.Add(item.SubItems[3].Text + @"\" + file);
+                    string fileToDecompress = item.SubItems[3].Text + @"\" + file;
 
                     if (Path.GetExtension(file) == ".zip")
                     {
-                        Ionic.Zip.ZipFile zip = Ionic.Zip.ZipFile.Read(item.SubItems[3].Text + @"\" + file);
+                        Ionic.Zip.ZipFile zip = Ionic.Zip.ZipFile.Read(fileToDecompress);
                         Directory.CreateDirectory(savePath);
                         foreach (ZipEntry entry in zip)
                         {
@@ -100,7 +101,7 @@ namespace CsharpZip
                     }
                     else if (Path.GetExtension(file) == ".tar")
                     {
-                        Stream inStream = File.OpenRead(item.SubItems[3].Text + @"\" + file);
+                        Stream inStream = File.OpenRead(fileToDecompress);
 
                         TarArchive tarArchive = TarArchive.CreateInputTarArchive(inStream);
                         tarArchive.ExtractContents(savePath);
@@ -109,20 +110,28 @@ namespace CsharpZip
                         inStream.Close();
                     }
 
-                    else if (Path.GetExtension(file) == ".tar.bz2")
+                    else if (Path.GetExtension(file) == ".bz2")
                     {
-                        using (FileStream fileToDecompressAsStream = file.OpenRead())
-                        using (FileStream decompressedStream = File.Create(savePath))
+                        byte[] dataBuffer = new byte[4096];
+
+                        using (Stream fs = new FileStream(fileToDecompress, FileMode.Open, FileAccess.Read))
                         {
-                            try
+                            using (BZip2InputStream bzip = new BZip2InputStream(fs))
                             {
-                                BZip2.Decompress(fileToDecompressAsStream, decompressedStream, true);
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine(ex.Message);
+                                using (FileStream fsOut = File.Create(savePath + Path.GetFileNameWithoutExtension(fileToDecompress)))
+                                {
+                                    StreamUtils.Copy(bzip, fsOut, dataBuffer);
+                                }
                             }
                         }
+
+                        Stream inStream = File.OpenRead(savePath + Path.GetFileNameWithoutExtension(fileToDecompress));
+
+                        TarArchive tarArchive = TarArchive.CreateInputTarArchive(inStream);
+                        tarArchive.ExtractContents(savePath);
+                        tarArchive.Close();
+                        File.Delete(inStream.ToString());
+                        inStream.Close();
                     }
                 }
             }
