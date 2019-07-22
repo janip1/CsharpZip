@@ -170,7 +170,6 @@
             // 
             // btnExtract
             // 
-            this.btnExtract.Enabled = false;
             this.btnExtract.Location = new System.Drawing.Point(559, 158);
             this.btnExtract.Name = "btnExtract";
             this.btnExtract.Size = new System.Drawing.Size(99, 23);

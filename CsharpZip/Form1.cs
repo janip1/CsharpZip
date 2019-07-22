@@ -8,6 +8,8 @@ using System.Collections.Specialized;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Ionic.Zip;
+using ZipEntry = Ionic.Zip.ZipEntry;
 
 namespace CsharpZip
 {
@@ -76,16 +78,54 @@ namespace CsharpZip
 
         private void BtnExtract_Click(object sender, EventArgs e)
         {
+            saveFileDialog1.ShowDialog();
+
             filesList = new StringCollection();
-            foreach (ListViewItem item in fileExplorer.SelectedItems)
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                string file = item.SubItems[0].Text;
-                filesList.Add(item.SubItems[3].Text + @"\" + file);
+                string savePath = Path.GetFullPath(saveFileDialog1.FileName);
+                foreach (ListViewItem item in fileExplorer.SelectedItems)
+                {
+                    string file = item.SubItems[0].Text;
+                    filesList.Add(item.SubItems[3].Text + @"\" + file);
+
+                    if (Path.GetExtension(file) == ".zip")
+                    {
+                        Ionic.Zip.ZipFile zip = Ionic.Zip.ZipFile.Read(item.SubItems[3].Text + @"\" + file);
+                        Directory.CreateDirectory(savePath);
+                        foreach (ZipEntry entry in zip)
+                        {
+                            entry.Extract(savePath, ExtractExistingFileAction.OverwriteSilently);
+                        }
+                    }
+                    else if (Path.GetExtension(file) == ".tar")
+                    {
+                        Stream inStream = File.OpenRead(item.SubItems[3].Text + @"\" + file);
+
+                        TarArchive tarArchive = TarArchive.CreateInputTarArchive(inStream);
+                        tarArchive.ExtractContents(savePath);
+                        tarArchive.Close();
+
+                        inStream.Close();
+                    }
+
+                    else if (Path.GetExtension(file) == ".tar.bz2")
+                    {
+                        using (FileStream fileToDecompressAsStream = file.OpenRead())
+                        using (FileStream decompressedStream = File.Create(savePath))
+                        {
+                            try
+                            {
+                                BZip2.Decompress(fileToDecompressAsStream, decompressedStream, true);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                            }
+                        }
+                    }
+                }
             }
-            DataObject dataObject = new DataObject();
-            dataObject.SetFileDropList(filesList);
-            Extract extWin = new Extract();
-            extWin.ShowDialog();
         }
 
         private void FileExplorer_ItemDrag(object sender, ItemDragEventArgs e)
@@ -188,12 +228,12 @@ namespace CsharpZip
         private void ListFileContents(string path)
         {
             fileExplorer.Items.Clear();
-            if (path.Contains(".zip"))
+            if (Path.GetExtension(path) == ".zip")
             {
                 using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                using (var zf = new ZipFile(fs))
+                using (var zf = new ICSharpCode.SharpZipLib.Zip.ZipFile(fs))
                 {
-                    foreach (ZipEntry item in zf)
+                    foreach (ICSharpCode.SharpZipLib.Zip.ZipEntry item in zf)
                     {
                         if (item.IsDirectory)
                             continue;
@@ -211,7 +251,7 @@ namespace CsharpZip
                     }
                 }        
             }
-            else if (path.Contains(".tgz"))
+            else if (Path.GetExtension(path) == ".tgz")
             {
                 using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
                 using (var tarFile = new TarInputStream(fs))
@@ -233,7 +273,7 @@ namespace CsharpZip
                     }
                 }
             }
-            else if (path.Contains(".tar.bz2"))
+            else if (Path.GetExtension(path) == ".tar.bz2")
             {
                 using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
                 using (var bzFile = new BZip2InputStream(fs))
