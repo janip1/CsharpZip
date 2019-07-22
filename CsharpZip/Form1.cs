@@ -1,9 +1,7 @@
 ﻿using ICSharpCode.SharpZipLib.Core;
-using ICSharpCode.SharpZipLib.Zip;
 using ICSharpCode.SharpZipLib.Tar;
 using ICSharpCode.SharpZipLib.BZip2;
 using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Drawing;
 using System.IO;
@@ -31,38 +29,65 @@ namespace CsharpZip
             Application.Restart();
         }
 
+        /// <summary>
+        /// Metoda se sproži ob kliku na gumb Odpri mapo in  odpre FolderBrowserDialog, 
+        /// s katerim odpremo obstoječ direktorij za prikaz v fileExplorerju.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnOpenFolder_Click(object sender, EventArgs e)
         {
+            // Pobriši morebitne elemente v file explorerju
             fileExplorer.Items.Clear();
+
+            // uporabi FolderBrowserDialog
             using (FolderBrowserDialog fbd = new FolderBrowserDialog() { Description = "Izberi mapo" })
             {
                 if (fbd.ShowDialog() == DialogResult.OK)
                 {
+                    // Zapiši pot do direktorija v txtPath vnosno polje
                     txtPath.Text = fbd.SelectedPath;
-                    
+                    // Klic zunanje metode za prikaz podatkov odprtega direktorija
                     ListDirectory(fbd.SelectedPath);
                 }
             }
         }
 
+        /// <summary>
+        /// Metoda BtnOpenFile_Click se sproži ob kliku na gumb Odpri datoteko in prikaže openFileDialog
+        /// uporabi se za prikaz podatkov stisnjene datoteke.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnOpenFile_Click(object sender, EventArgs e)
         {
+            // Pobriši morebitne elemente v file explorerju
             fileExplorer.Items.Clear();
             using (openFileDialog1)
             {
                 if(openFileDialog1.ShowDialog() == DialogResult.OK)
                 {
+                    // Zapiši pot do datoteke v txtPath vnosno polje
                     string filePath = openFileDialog1.InitialDirectory + openFileDialog1.FileName;
-
+                    txtPath.Text = filePath;
+                    // Klic zunanje metode za prikaz podatkov odprte datoteke
                     ListFileContents(filePath);
                 }
             }
         }
 
+        /// <summary>
+        /// Metoda, ki se pokliče, ko kliknemo na gumb Stisni. Sprejme listo izbranih datotek iz file explorerja
+        /// in jih pošlje v Dialog Compress. Dialog se odpre.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnCompress_Click(object sender, EventArgs e)
         {
+            // StringCollection izbranih datotek
             int i = 0;
             filesList = new StringCollection();
+            // Preberi izbrane datoteke in jih shrani v StringCollection filesList
             foreach (ListViewItem item in fileExplorer.SelectedItems)
             {
                 string file = item.SubItems[0].Text;
@@ -71,18 +96,27 @@ namespace CsharpZip
             }
             DataObject dataObject = new DataObject();
             dataObject.SetFileDropList(filesList);
-
+            // Odpri dialog Compress
             Compress compWin = new Compress();
             compWin.ShowDialog();
         }
 
+        /// <summary>
+        /// Metoda, ki se pokliče, ko kliknemo na gumb Razširi. Odpre saveFileDialog in prebere kam bomo datoteko 
+        /// shranili.
+        /// OPOMBA: metoda še ne deluje 100% pravilno.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnExtract_Click(object sender, EventArgs e)
         {
+            // Odpri saveFileDialog
             saveFileDialog1.ShowDialog();
 
             filesList = new StringCollection();
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                // Pridobi shranjevalno pot
                 string savePath = Path.GetFullPath(saveFileDialog1.FileName);
                 foreach (ListViewItem item in fileExplorer.SelectedItems)
                 {
@@ -90,6 +124,7 @@ namespace CsharpZip
                     filesList.Add(item.SubItems[3].Text + @"\" + file);
                     string fileToDecompress = item.SubItems[3].Text + @"\" + file;
 
+                    // Preveri katera oblika datoteke je: ZIP, TAR ali TAR.BZ2
                     if (Path.GetExtension(file) == ".zip")
                     {
                         Ionic.Zip.ZipFile zip = Ionic.Zip.ZipFile.Read(fileToDecompress);
@@ -137,6 +172,12 @@ namespace CsharpZip
             }
         }
 
+        /// <summary>
+        /// Metoda, ki se sproži ob prijemanju in vlečenju datotek izven glavnega okna. 
+        /// Trenutno deluje samo za navadne datoteke.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FileExplorer_ItemDrag(object sender, ItemDragEventArgs e)
         {
             int i = 0;
@@ -153,6 +194,11 @@ namespace CsharpZip
             fileExplorer.DoDragDrop(dataObject, DragDropEffects.Copy);
         }
 
+        /// <summary>
+        /// Metoda, ki se sproži ob dvokliku na direktorij, znotraj file explorerja in odpre direktorij 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ListItem_DoubleClick(object sender, MouseEventArgs e)
         {
             if(fileExplorer.SelectedItems.Count > 0)
@@ -170,6 +216,11 @@ namespace CsharpZip
             }
         }
 
+        /// <summary>
+        /// Metoda, ki se sproži ob kliku na gumb "eno višje"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OneUp_Click(object sender, EventArgs e)
         {
             fileExplorer.Items.Clear();
@@ -183,13 +234,19 @@ namespace CsharpZip
             }   
         }
 
+        /// <summary>
+        /// Metoda, ki se kliče pri prikazu datotek in map
+        /// </summary>
+        /// <param name="path"></param>
         private void ListDirectory(string path)
         {
             DirectoryInfo directory = new DirectoryInfo(path);
             DirectoryInfo[] subdirectories = directory.GetDirectories();
 
+            // Če ima direktorij poddirektorije prikaži direktorije in datoteke, če ne samo datoteke
             if (subdirectories.Length != 0)
             {
+                //Pridobi direktorije
                 foreach (DirectoryInfo subDirectory in subdirectories)
                 {
                     Icon iconForFile = DefaultIcons.FolderLarge;
@@ -199,6 +256,7 @@ namespace CsharpZip
                     fileExplorer.Items.Add(row);
                 }
 
+                //Pridobi datoteke
                 foreach (string item in Directory.GetFiles(path))
                 {
                     FileInfo file = new FileInfo(item);
@@ -234,6 +292,11 @@ namespace CsharpZip
             }
         }
 
+        /// <summary>
+        /// Metoda, ki prikaže podatke in datoteke znotraj kompresirane datoteke. Preveri katera datoteka se odpira
+        /// in glede na to sproži potrebno kodo.
+        /// </summary>
+        /// <param name="path"></param>
         private void ListFileContents(string path)
         {
             fileExplorer.Items.Clear();
@@ -305,9 +368,6 @@ namespace CsharpZip
                     }
                 }
             }
-
-
         }
-
     }
 }
