@@ -65,12 +65,13 @@
             // 
             // menuStrip1
             // 
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.datotekaToolStripMenuItem,
             this.pomočToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(670, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(669, 30);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -84,44 +85,44 @@
             this.toolStripMenuItem1,
             this.izhodToolStripMenuItem});
             this.datotekaToolStripMenuItem.Name = "datotekaToolStripMenuItem";
-            this.datotekaToolStripMenuItem.Size = new System.Drawing.Size(66, 20);
+            this.datotekaToolStripMenuItem.Size = new System.Drawing.Size(84, 24);
             this.datotekaToolStripMenuItem.Text = "Datoteka";
             // 
             // novaToolStripMenuItem
             // 
             this.novaToolStripMenuItem.Name = "novaToolStripMenuItem";
-            this.novaToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.novaToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
             this.novaToolStripMenuItem.Text = "Nova";
             this.novaToolStripMenuItem.Click += new System.EventHandler(this.NovaToolStripMenuItem_Click);
             // 
             // odpriToolStripMenuItem
             // 
             this.odpriToolStripMenuItem.Name = "odpriToolStripMenuItem";
-            this.odpriToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.odpriToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
             this.odpriToolStripMenuItem.Text = "Odpri";
             // 
             // stisniToolStripMenuItem
             // 
             this.stisniToolStripMenuItem.Name = "stisniToolStripMenuItem";
-            this.stisniToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.stisniToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
             this.stisniToolStripMenuItem.Text = "Stisni";
             // 
             // razširiToolStripMenuItem
             // 
             this.razširiToolStripMenuItem.Name = "razširiToolStripMenuItem";
-            this.razširiToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.razširiToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
             this.razširiToolStripMenuItem.Text = "Razširi";
             this.razširiToolStripMenuItem.Click += new System.EventHandler(this.BtnExtract_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(104, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(132, 6);
             // 
             // izhodToolStripMenuItem
             // 
             this.izhodToolStripMenuItem.Name = "izhodToolStripMenuItem";
-            this.izhodToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.izhodToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
             this.izhodToolStripMenuItem.Text = "Izhod";
             this.izhodToolStripMenuItem.Click += new System.EventHandler(this.IzhodToolStripMenuItem_Click);
             // 
@@ -130,13 +131,13 @@
             this.pomočToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.oProgramuToolStripMenuItem});
             this.pomočToolStripMenuItem.Name = "pomočToolStripMenuItem";
-            this.pomočToolStripMenuItem.Size = new System.Drawing.Size(57, 20);
+            this.pomočToolStripMenuItem.Size = new System.Drawing.Size(68, 24);
             this.pomočToolStripMenuItem.Text = "Pomoč";
             // 
             // oProgramuToolStripMenuItem
             // 
             this.oProgramuToolStripMenuItem.Name = "oProgramuToolStripMenuItem";
-            this.oProgramuToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+            this.oProgramuToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
             this.oProgramuToolStripMenuItem.Text = "O programu";
             // 
             // label1
@@ -144,7 +145,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(13, 38);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 13);
+            this.label1.Size = new System.Drawing.Size(65, 17);
             this.label1.TabIndex = 3;
             this.label1.Text = "Datoteka";
             // 
@@ -183,6 +184,7 @@
             this.statusStrip1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.statusStrip1.AutoSize = false;
             this.statusStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2,
@@ -197,18 +199,22 @@
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(42, 17);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(53, 16);
             this.toolStripStatusLabel1.Text = "Stanje:";
             // 
             // toolStripStatusLabel2
             // 
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(0, 17);
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(0, 16);
             // 
             // toolStripProgressBar2
             // 
             this.toolStripProgressBar2.Name = "toolStripProgressBar2";
-            this.toolStripProgressBar2.Size = new System.Drawing.Size(100, 16);
+            this.toolStripProgressBar2.Size = new System.Drawing.Size(100, 14);
+            // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.AddExtension = false;
             // 
             // openFileDialog1
             // 
@@ -218,7 +224,7 @@
             // 
             this.txtPath.Location = new System.Drawing.Point(70, 35);
             this.txtPath.Name = "txtPath";
-            this.txtPath.Size = new System.Drawing.Size(463, 20);
+            this.txtPath.Size = new System.Drawing.Size(463, 22);
             this.txtPath.TabIndex = 10;
             // 
             // fileExplorer
@@ -228,6 +234,7 @@
             this.size,
             this.filetype,
             this.path});
+            this.fileExplorer.HideSelection = false;
             this.fileExplorer.LargeImageList = this.imageList1;
             this.fileExplorer.Location = new System.Drawing.Point(16, 69);
             this.fileExplorer.Name = "fileExplorer";
@@ -285,7 +292,7 @@
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(670, 354);
+            this.ClientSize = new System.Drawing.Size(669, 354);
             this.Controls.Add(this.btnOpenFile);
             this.Controls.Add(this.oneUp);
             this.Controls.Add(this.fileExplorer);

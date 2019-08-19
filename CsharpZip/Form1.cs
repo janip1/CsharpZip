@@ -110,33 +110,41 @@ namespace CsharpZip
         /// <param name="e"></param>
         private void BtnExtract_Click(object sender, EventArgs e)
         {
-            // Odpri saveFileDialog
-            saveFileDialog1.ShowDialog();
-
             filesList = new StringCollection();
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            if (fbd.ShowDialog() == DialogResult.OK)
             {
                 // Pridobi shranjevalno pot
-                string savePath = Path.GetFullPath(saveFileDialog1.FileName);
+                string savePath = fbd.SelectedPath;
+
                 foreach (ListViewItem item in fileExplorer.SelectedItems)
                 {
                     string file = item.SubItems[0].Text;
-                    filesList.Add(item.SubItems[3].Text + @"\" + file);
-                    string fileToDecompress = item.SubItems[3].Text + @"\" + file;
 
                     // Preveri katera oblika datoteke je: ZIP, TAR ali TAR.BZ2
-                    if (Path.GetExtension(file) == ".zip")
+                    if (Path.GetExtension(txtPath.Text) == ".zip")
                     {
-                        Ionic.Zip.ZipFile zip = Ionic.Zip.ZipFile.Read(fileToDecompress);
-                        Directory.CreateDirectory(savePath);
-                        foreach (ZipEntry entry in zip)
+                        Ionic.Zip.ZipFile zip = Ionic.Zip.ZipFile.Read(txtPath.Text);
+                        ZipEntry entry = zip[file];
+                        string enExists = savePath + @"\" + entry.FileName;
+
+                        if (File.Exists(enExists))
                         {
-                            entry.Extract(savePath, ExtractExistingFileAction.OverwriteSilently);
+                            if (MessageBox.Show("Datoteka " + file + " že obstaja. Ali jo želite zamenjati?", "Datoteka obstaja", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                                entry.Extract(savePath, ExtractExistingFileAction.OverwriteSilently);
+                            else
+                                break;
+                        }
+                        else
+                        { 
+                            entry.Extract(savePath);
                         }
                     }
+
                     else if (Path.GetExtension(file) == ".tar")
                     {
-                        Stream inStream = File.OpenRead(fileToDecompress);
+                        Stream inStream = File.OpenRead(txtPath.Text);
 
                         TarArchive tarArchive = TarArchive.CreateInputTarArchive(inStream);
                         tarArchive.ExtractContents(savePath);
@@ -145,22 +153,22 @@ namespace CsharpZip
                         inStream.Close();
                     }
 
-                    else if (Path.GetExtension(file) == ".bz2")
+                    else if (Path.GetExtension(file) == ".tar.bz2")
                     {
                         byte[] dataBuffer = new byte[4096];
 
-                        using (Stream fs = new FileStream(fileToDecompress, FileMode.Open, FileAccess.Read))
+                        using (Stream fs = new FileStream(txtPath.Text, FileMode.Open, FileAccess.Read))
                         {
                             using (BZip2InputStream bzip = new BZip2InputStream(fs))
                             {
-                                using (FileStream fsOut = File.Create(savePath + Path.GetFileNameWithoutExtension(fileToDecompress)))
+                                using (FileStream fsOut = File.Create(savePath + Path.GetFileNameWithoutExtension(txtPath.Text)))
                                 {
                                     StreamUtils.Copy(bzip, fsOut, dataBuffer);
                                 }
                             }
                         }
 
-                        Stream inStream = File.OpenRead(savePath + Path.GetFileNameWithoutExtension(fileToDecompress));
+                        Stream inStream = File.OpenRead(savePath + Path.GetFileNameWithoutExtension(txtPath.Text));
 
                         TarArchive tarArchive = TarArchive.CreateInputTarArchive(inStream);
                         tarArchive.ExtractContents(savePath);
@@ -186,7 +194,14 @@ namespace CsharpZip
             foreach (ListViewItem item in fileExplorer.SelectedItems)
             {
                 string file = item.SubItems[0].Text;
-                filePath.Add(item.SubItems[3].Text + @"\" + file);
+                if (item.SubItems[2].Text == "ICSharpCode.SharpZipLib.Zip.ZipEntry")
+                {
+                    MessageBox.Show("Datoteke ni mogoče prenesti z drag/drop funkcijo.", "Napaka", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else
+                {
+                    filePath.Add(item.SubItems[3].Text + @"\" + file);
+                }
                 i++;
             }
             DataObject dataObject = new DataObject();
@@ -201,7 +216,7 @@ namespace CsharpZip
         /// <param name="e"></param>
         private void ListItem_DoubleClick(object sender, MouseEventArgs e)
         {
-            if(fileExplorer.SelectedItems.Count > 0)
+            if (fileExplorer.SelectedItems.Count > 0)
             {
                 foreach (ListViewItem item in fileExplorer.SelectedItems)
                 {
@@ -210,8 +225,20 @@ namespace CsharpZip
                     fileExplorer.Items.Clear();
                     txtPath.Text = path;
 
-                    if(Directory.Exists(path))
+                    FileAttributes attr = File.GetAttributes(path);
+                    if (Directory.Exists(path) && attr.HasFlag(FileAttributes.Directory))
                         ListDirectory(path);
+                    else
+                    {
+                        MessageBox.Show("Prišlo je do napake. Mesto ni direktorij.", "Napaka", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+                        string input = txtPath.Text;
+                        int index = input.LastIndexOf(@"\");
+                        if (index > 0)
+                        {
+                            txtPath.Text = input.Substring(0, index);
+                            ListDirectory(txtPath.Text);
+                        }
+                    }
                 }
             }
         }
