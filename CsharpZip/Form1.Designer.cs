@@ -44,10 +44,6 @@
             this.btnOpenFolder = new System.Windows.Forms.Button();
             this.btnCompress = new System.Windows.Forms.Button();
             this.btnExtract = new System.Windows.Forms.Button();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripProgressBar2 = new System.Windows.Forms.ToolStripProgressBar();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.txtPath = new System.Windows.Forms.TextBox();
@@ -60,7 +56,6 @@
             this.oneUp = new System.Windows.Forms.Button();
             this.btnOpenFile = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -71,7 +66,7 @@
             this.pomočToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(669, 30);
+            this.menuStrip1.Size = new System.Drawing.Size(669, 28);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -179,39 +174,6 @@
             this.btnExtract.UseVisualStyleBackColor = true;
             this.btnExtract.Click += new System.EventHandler(this.BtnExtract_Click);
             // 
-            // statusStrip1
-            // 
-            this.statusStrip1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.statusStrip1.AutoSize = false;
-            this.statusStrip1.Dock = System.Windows.Forms.DockStyle.None;
-            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1,
-            this.toolStripStatusLabel2,
-            this.toolStripProgressBar2});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 332);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(642, 22);
-            this.statusStrip1.Stretch = false;
-            this.statusStrip1.TabIndex = 8;
-            this.statusStrip1.Text = "statusStrip1";
-            // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(53, 16);
-            this.toolStripStatusLabel1.Text = "Stanje:";
-            // 
-            // toolStripStatusLabel2
-            // 
-            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(0, 16);
-            // 
-            // toolStripProgressBar2
-            // 
-            this.toolStripProgressBar2.Name = "toolStripProgressBar2";
-            this.toolStripProgressBar2.Size = new System.Drawing.Size(100, 14);
-            // 
             // saveFileDialog1
             // 
             this.saveFileDialog1.AddExtension = false;
@@ -249,6 +211,7 @@
             // file
             // 
             this.file.Text = "Datoteka";
+            this.file.Width = 180;
             // 
             // size
             // 
@@ -261,6 +224,7 @@
             // path
             // 
             this.path.Text = "Mesto";
+            this.path.Width = 180;
             // 
             // imageList1
             // 
@@ -292,12 +256,11 @@
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(669, 354);
+            this.ClientSize = new System.Drawing.Size(669, 329);
             this.Controls.Add(this.btnOpenFile);
             this.Controls.Add(this.oneUp);
             this.Controls.Add(this.fileExplorer);
             this.Controls.Add(this.txtPath);
-            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.btnExtract);
             this.Controls.Add(this.btnCompress);
             this.Controls.Add(this.btnOpenFolder);
@@ -308,8 +271,6 @@
             this.Text = "CsharpZip";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -328,8 +289,6 @@
         private System.Windows.Forms.Button btnOpenFolder;
         private System.Windows.Forms.Button btnCompress;
         private System.Windows.Forms.Button btnExtract;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.TextBox txtPath;
@@ -341,8 +300,6 @@
         private System.Windows.Forms.ColumnHeader filetype;
         private System.Windows.Forms.ColumnHeader path;
         private System.Windows.Forms.ImageList imageList1;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
-        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar2;
         private System.Windows.Forms.Button oneUp;
         private System.Windows.Forms.Button btnOpenFile;
     }

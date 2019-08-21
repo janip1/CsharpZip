@@ -1,13 +1,13 @@
-﻿using ICSharpCode.SharpZipLib.Core;
-using ICSharpCode.SharpZipLib.Tar;
-using ICSharpCode.SharpZipLib.BZip2;
-using System;
+﻿using System;
 using System.Collections.Specialized;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Ionic.Zip;
 using ZipEntry = Ionic.Zip.ZipEntry;
+using ICSharpCode.SharpZipLib.Tar;
+using ICSharpCode.SharpZipLib.BZip2;
+using ICSharpCode.SharpZipLib.GZip;
 
 namespace CsharpZip
 {
@@ -87,18 +87,25 @@ namespace CsharpZip
             // StringCollection izbranih datotek
             int i = 0;
             filesList = new StringCollection();
-            // Preberi izbrane datoteke in jih shrani v StringCollection filesList
-            foreach (ListViewItem item in fileExplorer.SelectedItems)
+            if (fileExplorer.SelectedItems.Count > 0)
             {
-                string file = item.SubItems[0].Text;
-                filesList.Add(item.SubItems[3].Text + @"\" + file);
-                i++;
+                // Preberi izbrane datoteke in jih shrani v StringCollection filesList
+                foreach (ListViewItem item in fileExplorer.SelectedItems)
+                {
+                    string file = item.SubItems[0].Text;
+                    filesList.Add(item.SubItems[3].Text + @"\" + file);
+                    i++;
+                }
+                DataObject dataObject = new DataObject();
+                dataObject.SetFileDropList(filesList);
+                // Odpri dialog Compress
+                Compress compWin = new Compress();
+                compWin.ShowDialog();
             }
-            DataObject dataObject = new DataObject();
-            dataObject.SetFileDropList(filesList);
-            // Odpri dialog Compress
-            Compress compWin = new Compress();
-            compWin.ShowDialog();
+            else
+            {
+                MessageBox.Show("Nobena datoteka ni bila izbrana. Prosimo izberite datoteke.", "Napaka", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         /// <summary>
@@ -113,7 +120,7 @@ namespace CsharpZip
             filesList = new StringCollection();
 
             FolderBrowserDialog fbd = new FolderBrowserDialog();
-            if (fbd.ShowDialog() == DialogResult.OK)
+            if (fileExplorer.SelectedItems.Count > 0 && fbd.ShowDialog() == DialogResult.OK)
             {
                 // Pridobi shranjevalno pot
                 string savePath = fbd.SelectedPath;
@@ -122,11 +129,28 @@ namespace CsharpZip
                 {
                     string file = item.SubItems[0].Text;
 
-                    // Preveri katera oblika datoteke je: ZIP, TAR ali TAR.BZ2
+                    // Preveri katera oblika datoteke je: ZIP, TAR, GZIP ali TAR.BZ2
                     if (Path.GetExtension(txtPath.Text) == ".zip")
                     {
-                        Ionic.Zip.ZipFile zip = Ionic.Zip.ZipFile.Read(txtPath.Text);
+                        ZipFile zip = Ionic.Zip.ZipFile.Read(txtPath.Text);
                         ZipEntry entry = zip[file];
+                        if (zip[file].UsesEncryption == true)
+                        {
+                            PasswordPrompt passWin = new PasswordPrompt();
+                            passWin.ShowDialog();
+
+                            zip.Password = passWin.pass;
+                            try
+                            {
+                                entry.ExtractWithPassword(savePath, passWin.pass);
+                            }
+                            catch (BadPasswordException)
+                            {
+                                if (MessageBox.Show("Napačno geslo", "Napaka", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error) == DialogResult.Retry)
+                                    passWin.ShowDialog();
+                            }
+                        }
+                        
                         string enExists = savePath + @"\" + entry.FileName;
 
                         if (File.Exists(enExists))
@@ -137,46 +161,80 @@ namespace CsharpZip
                                 break;
                         }
                         else
-                        { 
+                        {
                             entry.Extract(savePath);
                         }
                     }
 
-                    else if (Path.GetExtension(file) == ".tar")
+                    else if (Path.GetExtension(txtPath.Text) == ".tar")
                     {
-                        Stream inStream = File.OpenRead(txtPath.Text);
-
-                        TarArchive tarArchive = TarArchive.CreateInputTarArchive(inStream);
-                        tarArchive.ExtractContents(savePath);
-                        tarArchive.Close();
-
-                        inStream.Close();
+                        byte[] outBuffer = new byte[4096];
+                        TarInputStream tar = new TarInputStream(new FileStream(txtPath.Text, FileMode.Open, FileAccess.Read));
+                        TarEntry curEntry = tar.GetNextEntry();
+                        while (curEntry != null)
+                        {
+                            if (curEntry.Name == file)
+                            {
+                                FileStream fs = new FileStream(savePath + @"\" + curEntry.Name, FileMode.Create, FileAccess.Write);
+                                BinaryWriter bw = new BinaryWriter(fs);
+                                tar.Read(outBuffer, 0, (int)curEntry.Size);
+                                bw.Write(outBuffer, 0, outBuffer.Length);
+                                bw.Close();
+                            }
+                            curEntry = tar.GetNextEntry();
+                        }
+                        tar.Close();
                     }
 
-                    else if (Path.GetExtension(file) == ".tar.bz2")
+                    else if (Path.GetExtension(txtPath.Text) == ".bz2")
                     {
-                        byte[] dataBuffer = new byte[4096];
-
-                        using (Stream fs = new FileStream(txtPath.Text, FileMode.Open, FileAccess.Read))
+                        Stream str = new FileStream(txtPath.Text, FileMode.Open, FileAccess.Read);
+                        BZip2InputStream bzStr = new BZip2InputStream(str);
+                        TarInputStream tar = new TarInputStream(bzStr);
+                        TarEntry curEntry = tar.GetNextEntry();
+                        while (curEntry != null)
                         {
-                            using (BZip2InputStream bzip = new BZip2InputStream(fs))
+                            if (curEntry.Name == file)
                             {
-                                using (FileStream fsOut = File.Create(savePath + Path.GetFileNameWithoutExtension(txtPath.Text)))
-                                {
-                                    StreamUtils.Copy(bzip, fsOut, dataBuffer);
-                                }
+                                byte[] outBuffer = new byte[curEntry.Size];
+                                FileStream fs = new FileStream(savePath + @"\" + curEntry.Name, FileMode.Create, FileAccess.Write);
+                                BinaryWriter bw = new BinaryWriter(fs);
+                                tar.Read(outBuffer, 0, (int)curEntry.Size);
+                                bw.Write(outBuffer, 0, outBuffer.Length);
+                                bw.Close();
                             }
+                            curEntry = tar.GetNextEntry();
                         }
-
-                        Stream inStream = File.OpenRead(savePath + Path.GetFileNameWithoutExtension(txtPath.Text));
-
-                        TarArchive tarArchive = TarArchive.CreateInputTarArchive(inStream);
-                        tarArchive.ExtractContents(savePath);
-                        tarArchive.Close();
-                        File.Delete(inStream.ToString());
-                        inStream.Close();
+                        tar.Close();
+                    }
+                    
+                    else if (Path.GetExtension(txtPath.Text) == ".tgz")
+                    {
+                        Stream str = new FileStream(txtPath.Text, FileMode.Open, FileAccess.Read);
+                        GZipInputStream gzStr = new GZipInputStream(str);
+                        TarInputStream tar = new TarInputStream(gzStr);
+                        
+                        TarEntry curEntry = tar.GetNextEntry();
+                        while (curEntry != null)
+                        {
+                            if (curEntry.Name == file)
+                            {
+                                byte[] outBuffer = new byte[curEntry.Size];
+                                FileStream fs = new FileStream(savePath + @"\" + curEntry.Name, FileMode.Create, FileAccess.Write);
+                                BinaryWriter bw = new BinaryWriter(fs);
+                                tar.Read(outBuffer, 0, (int)curEntry.Size);
+                                bw.Write(outBuffer, 0, outBuffer.Length);
+                                bw.Close();
+                            }
+                            curEntry = tar.GetNextEntry();
+                        }
+                        tar.Close();
                     }
                 }
+            }
+            else
+            {
+                MessageBox.Show("Nobena datoteka ni bila izbrana. Prosimo izberite datoteke.", "Napaka", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -194,13 +252,14 @@ namespace CsharpZip
             foreach (ListViewItem item in fileExplorer.SelectedItems)
             {
                 string file = item.SubItems[0].Text;
-                if (item.SubItems[2].Text == "ICSharpCode.SharpZipLib.Zip.ZipEntry")
-                {
-                    MessageBox.Show("Datoteke ni mogoče prenesti z drag/drop funkcijo.", "Napaka", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-                else
+
+                try
                 {
                     filePath.Add(item.SubItems[3].Text + @"\" + file);
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    MessageBox.Show("Datoteke ni mogoče prenesti z drag/drop funkcijo.", "Napaka", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 i++;
             }
@@ -228,6 +287,10 @@ namespace CsharpZip
                     FileAttributes attr = File.GetAttributes(path);
                     if (Directory.Exists(path) && attr.HasFlag(FileAttributes.Directory))
                         ListDirectory(path);
+                    else if (attr.HasFlag(FileAttributes.Archive))
+                    {
+                        ListFileContents(txtPath.Text);
+                    }
                     else
                     {
                         MessageBox.Show("Prišlo je do napake. Mesto ni direktorij.", "Napaka", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
@@ -342,18 +405,41 @@ namespace CsharpZip
 
                         iconForFile = Icon.ExtractAssociatedIcon(path);
                         imageList1.Images.Add(item.GetType().ToString(), iconForFile);
-                        row.ImageKey = item.GetType().ToString();
+                        row.ImageKey = Path.GetExtension(item.Name);
                         row.SubItems.Add(item.Size.ToString());
-                        row.SubItems.Add(item.GetType().ToString());
+                        row.SubItems.Add(Path.GetExtension(item.Name));
                         
                         fileExplorer.Items.Add(row);
                     }
                 }        
             }
-            else if (Path.GetExtension(path) == ".tgz")
+            else if (Path.GetExtension(path) == ".tar")
             {
                 using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
                 using (var tarFile = new TarInputStream(fs))
+                {
+                    TarEntry entry;
+
+                    while ((entry = tarFile.GetNextEntry()) != null)
+                    {
+
+                        Icon iconForFile = SystemIcons.WinLogo;
+                        ListViewItem row = new ListViewItem(entry.Name);
+                        iconForFile = Icon.ExtractAssociatedIcon(path);
+                        imageList1.Images.Add(Path.GetExtension(entry.Name), iconForFile);
+                        row.ImageKey = Path.GetExtension(entry.Name);
+                        row.SubItems.Add(entry.Size.ToString());
+                        row.SubItems.Add(Path.GetExtension(entry.Name));
+
+                        fileExplorer.Items.Add(row);
+                    }
+                }
+            }
+            else if (Path.GetExtension(path) == ".bz2")
+            {
+                using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                using (BZip2InputStream bzFile = new BZip2InputStream(fs))
+                using (var tarFile = new TarInputStream(bzFile))
                 {
                     TarEntry entry;
 
@@ -372,11 +458,11 @@ namespace CsharpZip
                     }
                 }
             }
-            else if (Path.GetExtension(path) == ".tar.bz2")
+            else if (Path.GetExtension(path) == ".tgz")
             {
                 using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                using (var bzFile = new BZip2InputStream(fs))
-                using (var tarFile = new TarInputStream(bzFile))
+                using (GZipInputStream gzFile = new GZipInputStream(fs))
+                using (var tarFile = new TarInputStream(gzFile))
                 {
                     TarEntry entry;
 
