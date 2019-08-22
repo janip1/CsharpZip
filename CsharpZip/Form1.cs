@@ -96,8 +96,6 @@ namespace CsharpZip
                     filesList.Add(item.SubItems[3].Text + @"\" + file);
                     i++;
                 }
-                DataObject dataObject = new DataObject();
-                dataObject.SetFileDropList(filesList);
                 // Odpri dialog Compress
                 Compress compWin = new Compress();
                 compWin.ShowDialog();

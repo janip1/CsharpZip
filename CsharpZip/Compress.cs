@@ -59,6 +59,7 @@ namespace CsharpZip
                
                 else
                 {
+                    //ustvari ZIP
                     using (ZipFile zip = new ZipFile())
                     {
                         Stopwatch stopwatch = Stopwatch.StartNew();

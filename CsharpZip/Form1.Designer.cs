@@ -55,6 +55,7 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.oneUp = new System.Windows.Forms.Button();
             this.btnOpenFile = new System.Windows.Forms.Button();
+            this.odpriMapoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -74,6 +75,7 @@
             // 
             this.datotekaToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.novaToolStripMenuItem,
+            this.odpriMapoToolStripMenuItem,
             this.odpriToolStripMenuItem,
             this.stisniToolStripMenuItem,
             this.razširiToolStripMenuItem,
@@ -86,38 +88,40 @@
             // novaToolStripMenuItem
             // 
             this.novaToolStripMenuItem.Name = "novaToolStripMenuItem";
-            this.novaToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
+            this.novaToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.novaToolStripMenuItem.Text = "Nova";
             this.novaToolStripMenuItem.Click += new System.EventHandler(this.NovaToolStripMenuItem_Click);
             // 
             // odpriToolStripMenuItem
             // 
             this.odpriToolStripMenuItem.Name = "odpriToolStripMenuItem";
-            this.odpriToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
-            this.odpriToolStripMenuItem.Text = "Odpri";
+            this.odpriToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.odpriToolStripMenuItem.Text = "Odpri datoteko";
+            this.odpriToolStripMenuItem.Click += new System.EventHandler(this.BtnOpenFile_Click);
             // 
             // stisniToolStripMenuItem
             // 
             this.stisniToolStripMenuItem.Name = "stisniToolStripMenuItem";
-            this.stisniToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
+            this.stisniToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.stisniToolStripMenuItem.Text = "Stisni";
+            this.stisniToolStripMenuItem.Click += new System.EventHandler(this.BtnCompress_Click);
             // 
             // razširiToolStripMenuItem
             // 
             this.razširiToolStripMenuItem.Name = "razširiToolStripMenuItem";
-            this.razširiToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
+            this.razširiToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.razširiToolStripMenuItem.Text = "Razširi";
             this.razširiToolStripMenuItem.Click += new System.EventHandler(this.BtnExtract_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(132, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(221, 6);
             // 
             // izhodToolStripMenuItem
             // 
             this.izhodToolStripMenuItem.Name = "izhodToolStripMenuItem";
-            this.izhodToolStripMenuItem.Size = new System.Drawing.Size(135, 26);
+            this.izhodToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.izhodToolStripMenuItem.Text = "Izhod";
             this.izhodToolStripMenuItem.Click += new System.EventHandler(this.IzhodToolStripMenuItem_Click);
             // 
@@ -253,6 +257,13 @@
             this.btnOpenFile.UseVisualStyleBackColor = true;
             this.btnOpenFile.Click += new System.EventHandler(this.BtnOpenFile_Click);
             // 
+            // odpriMapoToolStripMenuItem
+            // 
+            this.odpriMapoToolStripMenuItem.Name = "odpriMapoToolStripMenuItem";
+            this.odpriMapoToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.odpriMapoToolStripMenuItem.Text = "Odpri mapo";
+            this.odpriMapoToolStripMenuItem.Click += new System.EventHandler(this.BtnOpenFolder_Click);
+            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -302,6 +313,7 @@
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.Button oneUp;
         private System.Windows.Forms.Button btnOpenFile;
+        private System.Windows.Forms.ToolStripMenuItem odpriMapoToolStripMenuItem;
     }
 }
 
